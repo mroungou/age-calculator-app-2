@@ -3,24 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
-
+  <link rel="stylesheet" href="./normalize.css">
+  <link rel="stylesheet" href="./dist/css/main.css">
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
-  
+  <script src="./index.js" defer></script>
   <title>Age calculator app</title>
 </head>
-<body>
-
-  Day
-  DD
-
-  Month
-  MM
-
-  Year
-  YYYY
-
-  -- years
-  -- months
-  -- days
-</body>
+	<body>
+		<main>
+			<form action="" class="form" id="form">
+				<div class="inputs">
+					<div class="day has-error">
+						<label for="day">Day</label>
+						<input type="text" name="day" id="day" placeholder="DD" autocomplete="off" pattern="\d*" maxlength="2"></input>
+					</div>
+					<div class="month">
+						<label for="month">Month</label>
+						<input type="text" name="month" id="month" placeholder="MM" autocomplete="off" pattern="\d*" maxlength="2"></input>
+					</div>
+					<div class="year">
+						<label for="year">Year</label>
+						<input type="text" name="year" id="year" placeholder="YYYY" autocomplete="off" pattern="\d*" maxlength="4"></input>
+					</div>
+					<div class="button">
+						<button class="btn">
+							<img src="./assets/images/icon-arrow.svg" alt="Submit">
+						</button>
+					</div>
+				</div>
+				<div class="output">
+					<div class="year-output"><span class="num" id="year-output">--</span>years</div>
+					<div class="month-output"><span class="num" id="month-output">--</span>months</div>
+					<div class="year-output"><span class="num" id="year-output">--</span>days</div>
+				</div>
+			</form>
+		</main>
+	</body>
 </html>

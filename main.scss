@@ -1,0 +1,107 @@
+@use 'variables' as v;
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: v.$lightGrey;
+}
+
+main {
+    margin: 5rem 1rem auto;
+    background: v.$white;
+    border-radius: 24px 24px 100px 24px;
+    padding: 3rem 1.5rem;
+}
+
+.inputs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: 1rem;
+
+    label {
+        font-size: .75rem;
+        letter-spacing: 2.5px;
+        text-transform: uppercase;
+        color: v.$grey;
+        font-weight: 700;
+        margin-bottom: .25rem;
+        font-weight: 700;
+    }
+    
+    input {
+        box-sizing: border-box;
+        padding: .7rem 1rem;
+        width: 100%;
+        border: 1px solid v.$lightGrey;
+        border-radius: 8px;
+        font-size: 1.25rem;
+        color: v.$offBlack;
+        font-weight: 700;
+    }
+
+    .button {
+        position: relative;
+        grid-column: 1/-1;
+        margin: 2rem 0;
+
+        .btn {
+            border-radius: 50%;
+            border: none;
+            background: v.$purple;
+            padding: 1.115rem 1.25rem;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+            
+            img {
+                width: 24px;
+                height: 24px;
+            }
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            height: 1px;
+            width: 100%;
+            background: v.$lightGrey;
+        }
+
+    }
+}
+
+.output {
+    font-size: 3.5rem;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: -2px;
+
+    .num {
+        color: v.$purple;
+        margin-right: .5rem;
+    }
+}
+
+.has-error {
+    label {
+        color: v.$lightRed;
+    }
+
+    input {
+        border: 1px solid v.$lightRed;
+    }
+
+    .error-div {
+        margin-top: .5rem;
+        color: v.$lightRed;
+        font-size: .875rem;
+        font-style: italic;
+    }
+}
