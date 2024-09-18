@@ -1,6 +1,12 @@
 const form = document.getElementById('form');
 const inputFields = document.querySelectorAll('input')
+const inputsDiv = document.getElementById('inputs');
+const inputs = document.getElementsByClassName('input');
 let dateData = {}
+
+const validationMessage = {
+    'empty': 'This field is required',
+}
 
 const validateInputs = () => {
 
@@ -10,7 +16,12 @@ const validateInputs = () => {
 
     for (const data in dateData) {
        if (dateData[data] === '') {
-        console.log('Missing')
+        /* the Object.keys(dateDate) extracts all the keys/properties of dateData
+        for the dateData obj it returns day, month and year
+        the keys are then in an array
+        indexOf(data) then looks for the position of data that has no value */
+        const index = Object.keys(dateData).indexOf(data);
+        hasError(inputs[index], validationMessage.empty);
        }
     }
 
@@ -23,7 +34,12 @@ const validateInputs = () => {
 }
 
 const hasError = (element, message) => {
-    missingValue.classList.add('has-erro');
+    const errorDiv = document.createElement('div');
+    errorDiv.textContent = message;
+    errorDiv.className = 'error-div';
+
+    element.parentElement.classList.add('has-error');
+    element.appendChild(errorDiv)
 }
 
 form.addEventListener('submit', (e) => {

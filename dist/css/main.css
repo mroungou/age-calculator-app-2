@@ -23,11 +23,11 @@ main {
   text-transform: uppercase;
   color: rgb(113, 111, 111);
   font-weight: 700;
-  margin-bottom: 0.25rem;
   font-weight: 700;
 }
 .inputs input {
   box-sizing: border-box;
+  margin-top: 0.5rem;
   padding: 0.7rem 1rem;
   width: 100%;
   border: 1px solid hsl(0, 0%, 86%);
@@ -88,4 +88,5 @@ main {
   color: hsl(0, 100%, 67%);
   font-size: 0.875rem;
   font-style: italic;
+  font-weight: 200;
 }/*# sourceMappingURL=main.css.map */

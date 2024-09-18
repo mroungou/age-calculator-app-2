@@ -27,12 +27,12 @@ main {
         text-transform: uppercase;
         color: v.$grey;
         font-weight: 700;
-        margin-bottom: .25rem;
         font-weight: 700;
     }
     
     input {
         box-sizing: border-box;
+        margin-top: .5rem;
         padding: .7rem 1rem;
         width: 100%;
         border: 1px solid v.$lightGrey;
@@ -103,5 +103,6 @@ main {
         color: v.$lightRed;
         font-size: .875rem;
         font-style: italic;
+        font-weight: 200;
     }
 }
