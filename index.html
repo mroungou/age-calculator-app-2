@@ -12,16 +12,15 @@
 	<body>
 		<main>
 			<form action="" class="form" id="form">
-				<div class="inputs" id="inputs">
-					<div class="day input">
+					<div class="day input-div">
 						<label for="day">Day</label>
 						<input type="text" name="day" id="day" placeholder="DD" autocomplete="off" pattern="\d*" maxlength="2"></input>
 					</div>
-					<div class="month input">
+					<div class="month input-div">
 						<label for="month">Month</label>
 						<input type="text" name="month" id="month" placeholder="MM" autocomplete="off" pattern="\d*" maxlength="2"></input>
 					</div>
-					<div class="year input">
+					<div class="year input-div">
 						<label for="year">Year</label>
 						<input type="text" name="year" id="year" placeholder="YYYY" autocomplete="off" pattern="\d*" maxlength="4"></input>
 					</div>
@@ -30,12 +29,11 @@
 							<img src="./assets/images/icon-arrow.svg" alt="Submit">
 						</button>
 					</div>
-				</div>
-				<div class="output">
-					<div class="year-output"><span class="num" id="year-output">--</span>years</div>
-					<div class="month-output"><span class="num" id="month-output">--</span>months</div>
-					<div class="year-output"><span class="num" id="year-output">--</span>days</div>
-				</div>
+					<div class="output">
+						<div class="year-output"><span class="num" id="year-output">--</span>years</div>
+						<div class="month-output"><span class="num" id="month-output">--</span>months</div>
+						<div class="day-output"><span class="num" id="day-output">--</span>days</div>
+					</div>
 			</form>
 		</main>
 	</body>
