@@ -27,7 +27,6 @@ main {
         text-transform: uppercase;
         color: v.$grey;
         font-weight: 700;
-        font-weight: 700;
     }
     
     input {
@@ -88,6 +87,10 @@ main {
         color: v.$purple;
         margin-right: .5rem;
     }
+}
+
+@media screen and (min-width: 1440px) {
+
 }
 
 .has-error {
