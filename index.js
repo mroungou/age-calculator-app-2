@@ -11,9 +11,26 @@ const validationMessage = {
     'empty': 'This field is required',
     'past': 'Must be in the past'
 }
+/* using timestamps - getting the difference in ms from 1970
+- once the diff has been obtained dividing to get the total years, age, months
+- this accounts for leap years automatically
+- much more precise than the JDN algorithm;
+*/
+const calculateAgeMS = (diffInMs) => {
+    const ageInYears = Math.floor(diffInMs / 3.154e+10)
+    const ageMonths = Math.floor((diffInMs % 3.154e+10) / 2.628e+9)
+    const ageDays = Math.floor(((diffInMs % 3.154e+10) % 2.628e+9) / 8.64e+7)
+    const daysOnEarth = diffInMs / 8.64e+7;
 
-/* going to be using the julian day number algorithm */
+    yearOutput.innerText = ageInYears;
+    monthOutput.innerText = ageMonths;
+    dayOutput.innerText = ageDays;
+    console.log(ageInYears, ageMonths, ageDays, daysOnEarth);
+}
 
+
+/* the julian day algorithm */
+/* 
 const calculateAge = (currentDay, currentMonth, currentYear, 
     birthDate, birthMonth, birthYear) => {
         const gregorianAdj = 2 - (birthYear / 100) + (birthYear / 400)
@@ -28,7 +45,7 @@ const calculateAge = (currentDay, currentMonth, currentYear,
         Math.floor(30.6001 * (currentMonth === 1 ? 13 : (currentMonth === 2 ? 14 : currentMonth  + 1))) 
         + currentDay - 1524.5
 
-        
+
         const diffDays = JDNCurrentYear - JDNBirth;
         const years = Math.floor((diffDays / 365.25));
         const daysRemaining = diffDays - (years * 365.25);
@@ -40,19 +57,14 @@ const calculateAge = (currentDay, currentMonth, currentYear,
         monthOutput.innerText = months;
         dayOutput.innerText = days;
         console.log(`birth ${JDNBirth}, current ${JDNCurrentYear}, difference ${diffDays}`);
-}
+} */
 
 const validateInputs = () => {
-    // this is updating the index for some reason - throws an error at hasNoError
-    // let index;
-
-    // for (const input of inputFields) {
-    //     dateData[input.name] = input.value;
-    // }
-
+   /* getting the name of the input and setting the value in the dateDate obj */
     inputFields.forEach(input => {
         dateData[input.name] = input.value; // this will get the value of day, month, year
 
+        // checks if an input was empty and handles the error
         if (input.value === '') {
             hasError(input, validationMessage.empty)
         } else {
@@ -60,25 +72,13 @@ const validateInputs = () => {
         }
     })
 
-    // for (const data in dateData) {
-    //    if (dateData[data] === '') {
-    //     /* the Object.keys(dateDate) extracts all the keys/properties of dateData
-    //     for the dateData obj it returns day, month and year
-    //     the keys are then in an array
-    //     indexOf(data) then looks for the position of data that has no value */
-    //     index = Object.keys(dateData).indexOf(data);
-    //     hasError(inputFields[index], validationMessage.empty);
-    //    } else {
-    //     hasNoError(inputFields[0]);
-    //    }
-    // }
-
     if (Object.values(dateData).every(value => value !== '')) {
         const birthday = Date.parse(`${dateData.month}-${dateData.day}-${dateData.year}`)
         const dateToday = Date.now()
         const currentYear = new Date().getFullYear()
-        const currentMonth = new Date().getMonth() + 1;
+        const currentMonth = new Date().getMonth() + 1; /* adding 1 as zero index */
         const currentDay = new Date().getDate()
+        const diffMS = dateToday - birthday;
         
         if (birthday > dateToday) {
             if (dateData.year > currentYear) {
@@ -86,14 +86,13 @@ const validateInputs = () => {
             }
         }
 
-        calculateAge(currentDay, currentMonth, currentYear, 
-            parseInt(dateData.day), parseInt(dateData.month), parseInt(dateData.year))
-    }
+        // using the JDN algorithm had issues with the months jan and feb when calculating the age in years
 
-    // console.log(birthday, dateToday);
-    
-    
-    // console.log(dateData);
+        /* calculateAge(currentDay, currentMonth, currentYear, 
+            parseInt(dateData.day), parseInt(dateData.month), parseInt(dateData.year)) */
+
+        calculateAgeMS(diffMS)
+    }
 
 }
 
