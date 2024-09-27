@@ -1,33 +1,53 @@
+import { isExists } from "https://cdn.skypack.dev/date-fns/isExists.mjs";
+import { isPast } from "https://cdn.skypack.dev/date-fns/isPast.mjs"
+import { differenceInCalendarDays } from "https://cdn.skypack.dev/date-fns/differenceInCalendarDays.mjs";
+import { getDaysInMonth } from "https://cdn.skypack.dev/date-fns/getDaysInMonth.mjs";
+
 const form = document.getElementById('form');
 const inputFields = document.querySelectorAll('input')
-const inputsDiv = document.getElementById('inputs');
-const inputs = document.getElementsByClassName('input-div');
 const yearOutput = document.getElementById('year-output');
 const monthOutput = document.getElementById('month-output');
 const dayOutput = document.getElementById('day-output');
 let dateData = {} // storing the day, month, and year
+let currentDateDate = {
+    currentYear : new Date().getFullYear(),
+    currentMonth : new Date().getMonth(),
+    currentDay : new Date().getDate()
+}
 
 const validationMessage = {
     'empty': 'This field is required',
-    'past': 'Must be in the past'
+    'past': 'Must be in the past',
+    'invalid': 'Must be a valid :attribute'
 }
 /* using timestamps - getting the difference in ms from 1970
 - once the diff has been obtained dividing to get the total years, age, months
 - this accounts for leap years automatically
 - much more precise than the JDN algorithm;
 */
-const calculateAgeMS = (diffInMs) => {
+/* const calculateAgeMS = (diffInMs) => {
     const ageInYears = Math.floor(diffInMs / 3.154e+10)
-    const ageMonths = Math.floor((diffInMs % 3.154e+10) / 2.628e+9)
-    const ageDays = Math.floor(((diffInMs % 3.154e+10) % 2.628e+9) / 8.64e+7)
+    const ageMonths = Math.floor((diffInMs % 3.154e+10) / (30.44 * 8.64e+7))
+    const ageDays = Math.floor(((diffInMs % 3.154e+10) % (30.44 * 8.64e+7)) / 86400000)
     const daysOnEarth = diffInMs / 8.64e+7;
 
     yearOutput.innerText = ageInYears;
     monthOutput.innerText = ageMonths;
     dayOutput.innerText = ageDays;
-    console.log(ageInYears, ageMonths, ageDays, daysOnEarth);
-}
+    // console.log(ageInYears, ageMonths, ageDays, daysOnEarth);
+} */
 
+const calculateAgeDays = (diffInDays) => {
+    const ageInYears = Math.floor(diffInDays / 365.25);
+    const remainderDays = diffInDays % 365.25
+    const ageMonths = Math.floor(remainderDays / 30.44)
+    const ageDays = Math.floor(remainderDays % 30.44)
+    console.log(`years: ${ageInYears}, months: ${ageMonths}, days: ${ageDays}`)
+
+    yearOutput.innerHTML = (ageInYears === 1) ? `<span class="num">${ageInYears}</span>year`: `<span class="num">${ageInYears}</span>years`
+    monthOutput.innerHTML = (ageMonths === 1) ? `<span class="num">${ageMonths}</span>month`: `<span class="num">${ageMonths}</span>months`;
+    dayOutput.innerHTML = (ageDays === 1) ? `<span class="num">${ageDays}</span>day`: `<span class="num">${ageDays}</span>days`;
+}
 
 /* the julian day algorithm */
 /* 
@@ -62,7 +82,7 @@ const calculateAge = (currentDay, currentMonth, currentYear,
 const validateInputs = () => {
    /* getting the name of the input and setting the value in the dateDate obj */
     inputFields.forEach(input => {
-        dateData[input.name] = input.value; // this will get the value of day, month, year
+        dateData[input.name] = parseInt(input.value); // this will get the value of day, month, year
 
         // checks if an input was empty and handles the error
         if (input.value === '') {
@@ -75,23 +95,63 @@ const validateInputs = () => {
     if (Object.values(dateData).every(value => value !== '')) {
         const birthday = Date.parse(`${dateData.month}-${dateData.day}-${dateData.year}`)
         const dateToday = Date.now()
-        const currentYear = new Date().getFullYear()
-        const currentMonth = new Date().getMonth() + 1; /* adding 1 as zero index */
-        const currentDay = new Date().getDate()
-        const diffMS = dateToday - birthday;
+        const diffInMs = dateToday - birthday
+        const {currentYear, currentMonth, currentDay} = currentDateDate;
+        const {day, month, year} = dateData // the user's birthday
+        const diffInDays = differenceInCalendarDays(new Date(currentYear, currentMonth, currentDay), 
+            new Date(year, month - 1, day));
         
-        if (birthday > dateToday) {
+        let daysInMonth = getDaysInMonth(new Date(year, month - 1))
+
+        if (isExists(dateData.year, dateData.month - 1, dateData.day) 
+            && isPast(new Date(dateData.year, dateData.month - 1, dateData.day))) {
+                // calculateAgeMS(diffMS)
+                calculateAgeDays(diffInDays)
+                //handling user invalid inputs
+                // if all the inputs are not valid
+        } else if ((year > currentYear) && (day > daysInMonth) && (month < 1 || month > 12)) {
+            hasError(inputFields[0], validationMessage.invalid.replace(':attribute', inputFields[0].name))
+            hasError(inputFields[1], validationMessage.invalid.replace(':attribute', inputFields[1].name))
+            hasError(inputFields[2], validationMessage.past);
+            // if the month and year aren't valid
+        } else if ((month < 1 || month > 12) && year > currentYear) {
+            hasError(inputFields[1], validationMessage.invalid.replace(':attribute', inputFields[1].name))
+            hasError(inputFields[2], validationMessage.past);
+            // if day and year aren't valid
+        }else if ((day > daysInMonth) && year > currentYear) {
+            hasError(inputFields[0], validationMessage.invalid.replace(':attribute', inputFields[0].name))
+            hasError(inputFields[2], validationMessage.past);
+            // if the day and month aren't valid
+        }else if ((day > daysInMonth) && (month < 1 || month > 12)) {
+            hasError(inputFields[1], validationMessage.invalid.replace(':attribute', inputFields[1].name))
+            hasError(inputFields[0], validationMessage.invalid.replace(':attribute', inputFields[0].name))
+            // if the day isn't valid
+        }else if (day > daysInMonth) {
+            hasError(inputFields[0], validationMessage.invalid.replace(':attribute', inputFields[0].name))
+            // if the month isn't valid
+        } else if (month < 1 || month > 12) {
+            hasError(inputFields[1], validationMessage.invalid.replace(':attribute', inputFields[1].name))
+            // if the year isn't valid
+        } else if (year > currentYear) {
+            hasError(inputFields[2], validationMessage.past);
+        }
+        
+    /*     if (birthday > dateToday) {
             if (dateData.year > currentYear) {
                 hasError(inputFields[2], validationMessage.past)
+            } else if (dateData.month > currentMonth) {
+                hasError(inputFields[1], validationMessage.past);
+            } else if (dateData.day > currentDay) {
+                hasError(inputFields[0], validationMessage.past)
             }
-        }
+        } else if (isNaN(birthday)) {
+            console.log('not valid')
+        } */
 
         // using the JDN algorithm had issues with the months jan and feb when calculating the age in years
 
         /* calculateAge(currentDay, currentMonth, currentYear, 
             parseInt(dateData.day), parseInt(dateData.month), parseInt(dateData.year)) */
-
-        calculateAgeMS(diffMS)
     }
 
 }
